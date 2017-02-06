@@ -1218,6 +1218,7 @@ void mouseReleased() {
       time[1] = 0;
       time[2] = 0;
       pausedFlag = 0;
+      coolButton = 0;
     }
   }
   
