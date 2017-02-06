@@ -111,6 +111,11 @@ int coolButton = 0;
 
 int finishedFlag = 0;
 
+int setLock = 0;
+
+int[] additionalFunc = {25, 25, 185, 25, 185, 75, 25, 75};
+int additional = 0;
+
 PFont f;
 
 /////////////////////////////////////////////////////
@@ -122,7 +127,7 @@ void loadSounds() {
   //beepSound = new SoundFile(this, "bing.mp3");
 
   // processing.js load sound
-  beepSound.setAttribute("src", "bing.mp3");
+  beepSound.setAttribute("src", "bing.wav");
   wrongSound.setAttribute("src", "wrong.wav");
   doneSound.setAttribute("src", "done.wav");
   alarmSound.setAttribute("src", "alarm.mp3");
@@ -221,6 +226,8 @@ void draw() {
     rect(enterButton[0], enterButton[1], 180, 60, 10);
   }
   
+  rect(additionalFunc[0], additionalFunc[1], 160, 50, 10);
+  
   //start rectangle on the bottom
   rect(startRect[0], startRect[1], 180, 60, 10);
   
@@ -253,20 +260,24 @@ void draw() {
   fill(127);
   
   //pause rectangle
+  if(additional == 1)
   rect(pauseRect[0], pauseRect[1], 130, 50, 10);
   
   //delay rectangle
+  if(additional == 1)
   rect(delayTimeRect[0], delayTimeRect[1], 160, 50, 10);
   //different color, depending if we set it to delay
   if(delayStart == 0)
     fill(255, 0, 0);
   else
     fill(0, 255, 0);
+  if(additional == 1)
   rect(delayRect[0], delayRect[1], 50, 50, 10);
   
   fill(127);
   
   //rectangle to set the code before starting
+  if(additional == 1)
   rect(codeRect[0], codeRect[1], 130, 50, 10);
   
   fill(0);
@@ -281,12 +292,15 @@ void draw() {
   
   fill(127);
   //alarm rectangle
+  if(additional == 1)
   rect(earlyAlarmRect[0], earlyAlarmRect[1], 160, 50, 10);
   
   //clean rectangle
+  if(additional == 1)
   rect(cleanRect[0], cleanRect[1], 130, 50, 10);
   
   //cool rectangle
+  if(additional == 1)
   rect(coolRect[0], coolRect[1], 130, 50, 10);
   
   //if we did click to clean
@@ -421,6 +435,7 @@ void draw() {
   
   //diff text and color if we did pause
   fill(0);
+  if(additional == 1){
   if(pausedFlag == 0){
    text("Pause", pauseRect[0] + 60, pauseRect[1] + 30);
   }
@@ -429,12 +444,13 @@ void draw() {
    text("Unpause", pauseRect[0] + 60, pauseRect[1] + 30);
    fill(0);
   }
+  }
   
   //yes/no labels on buttons if we want to clean
   if(cleanFlag == 1){
     fill(127);
     textSize(30);
-   text("Do you want to clean the oven?", yesButton[0]+100, yesButton[1]-30);
+   text("Do you want to clean the oven? Takes 5 minutes.", yesButton[0]+100, yesButton[1]-30);
    fill(0);
    textSize(24);
    text("Yes", yesButton[0]+45, yesButton[1]+40);
@@ -447,16 +463,19 @@ void draw() {
     fill(0);
   else
     fill(0, 191, 255);
+  if(additional == 1)
   text("Cool After\nCooking", coolRect[0]+60, coolRect[1]+20);
   
   fill(0);
   
   //setting code
   textSize(18);
+  if(additional == 1)
   text("Set Lock Code", codeRect[0] + 65, codeRect[1] + 30);
   textSize(18);
   textAlign(LEFT);
   int actualDelay = (delayTime[0]*100) + (delayTime[1]*10) + delayTime[2];
+  if(additional == 1)
   text("Delay: " + str(actualDelay) + " min", delayTimeRect[0] + 15 , delayTimeRect[1] + 32);
   textAlign(CENTER);
   textSize(24);
@@ -566,12 +585,21 @@ void draw() {
   textSize(16);
   if(alertIndex != 0)
     fill(155, 255, 0);
+  if(additional == 1)
   text("Alert when " + alertTime[alertIndex] + " min left", earlyAlarmRect[0] + 80, earlyAlarmRect[1] + 30);
   
   fill(0);
   
   textSize(20);
+  if(additional == 1)
   text("Clean oven", cleanRect[0] + 60, cleanRect[1]+30);
+  
+  textSize(16);
+  if(additional == 1)
+    fill(0, 255, 130);
+  else
+    fill(0);
+  text("Additional Features", additionalFunc[0]+80, additionalFunc[1]+30);
   
   fill(0);
   
@@ -1014,6 +1042,8 @@ void mouseReleased() {
   float[] delayX = {delayTimeRect[0], delayTimeRect[2], delayTimeRect[4], delayTimeRect[6]};
   float[] delayY = {delayTimeRect[1], delayTimeRect[3], delayTimeRect[5], delayTimeRect[7]};
   if(pnpoly(4, delayX, delayY, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
     if((pausedFlag != 1 && startFlag == 1)){
       errorText = "Please stop or pause the oven to adjust";
       playWrong();
@@ -1034,6 +1064,8 @@ void mouseReleased() {
   float[] delay2X = {delayRect[0], delayRect[2], delayRect[4], delayRect[6]};
   float[] delay2Y = {delayRect[1], delayRect[3], delayRect[5], delayRect[7]};
   if(pnpoly(4, delay2X, delay2Y, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
    if(delayStart == 0){
     delayStart = 1;
    }
@@ -1101,6 +1133,8 @@ void mouseReleased() {
   float[] codeX = {codeRect[0], codeRect[2], codeRect[4], codeRect[6]};
   float[] codeY = {codeRect[1], codeRect[3], codeRect[5], codeRect[7]};
   if(pnpoly(4, codeX, codeY, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
    if(inputCode == 1 || startFlag == 1){
      inputtingCode[0] = 0;
      inputtingCode[1] = 0;
@@ -1186,8 +1220,11 @@ void mouseReleased() {
       //startFlag = 1;
       setDelay = 0;
       setCode = 0;
-      //tell them to input the code than just starting it
-      inputCode = 1;
+      if(setLock == 1)
+        //tell them to input the code than just starting it
+        inputCode = 1;
+      else
+        startFlag = 1;
       if(funcSelected == 4){
         if(tempOpt == 0)
           temp = 250;
@@ -1225,6 +1262,8 @@ void mouseReleased() {
   float[] pausedX = {pauseRect[0], pauseRect[2], pauseRect[4], pauseRect[6]};
   float[] pausedY = {pauseRect[1], pauseRect[3], pauseRect[5], pauseRect[7]};
   if(pnpoly(4, pausedX, pausedY, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
    if(startFlag == 0){
       playWrong();
       errorText = "Oven is not running";
@@ -1279,6 +1318,9 @@ void mouseReleased() {
        playWrong();
       errorText = "Incorrect code, try again";
       errorSecond = millis();
+      time[0] = 0;
+      time[1] = 0;
+      time[2] = 0;
       return;
      }
    }
@@ -1291,12 +1333,15 @@ void mouseReleased() {
       inputtingCode[2] = 0;
      setCode = 0;
      cleanFlag = 0;
+     setLock = 1;
    }
   }
   
   float[] alarmX = {earlyAlarmRect[0], earlyAlarmRect[2], earlyAlarmRect[4], earlyAlarmRect[6]};
   float[] alarmY = {earlyAlarmRect[1], earlyAlarmRect[3], earlyAlarmRect[5], earlyAlarmRect[7]};
   if(pnpoly(4, alarmX, alarmY, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
     if(alertIndex == 5){
      alertIndex = 0; 
     }
@@ -1307,6 +1352,8 @@ void mouseReleased() {
   float[] cleanX = {cleanRect[0], cleanRect[2], cleanRect[4], cleanRect[6]};
   float[] cleanY = {cleanRect[1], cleanRect[3], cleanRect[5], cleanRect[7]};
   if(pnpoly(4, cleanX, cleanY, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
      if(startFlag == 1 || cleanFlag == 1){
        errorText = "Oven is currently running";
        errorSecond = millis();
@@ -1352,12 +1399,24 @@ void mouseReleased() {
   float[] coolX = {coolRect[0], coolRect[2], coolRect[4], coolRect[6]};
   float[] coolY = {coolRect[1], coolRect[3], coolRect[5], coolRect[7]};
   if(pnpoly(4, coolX, coolY, mouseX, mouseY) == 1){
+    if(additional == 0)
+      return;
     if(coolButton == 0){
      coolButton = 1;
     }
     else{
      coolButton = 0; 
     }
+  }
+  
+  float[] addX = {additionalFunc[0], additionalFunc[2], additionalFunc[4], additionalFunc[6]};
+  float[] addY = {additionalFunc[1], additionalFunc[3], additionalFunc[5], additionalFunc[7]};
+  if(pnpoly(4, addX, addY, mouseX, mouseY) == 1){
+    playBeep();
+   if(additional == 0)
+     additional = 1;
+   else
+     additional = 0;
   }
 }
 
