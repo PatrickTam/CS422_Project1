@@ -442,12 +442,12 @@ void draw() {
   }
   
   //cool text color change
-  textSize(20);
+  textSize(16);
   if(coolButton == 0)
     fill(0);
   else
     fill(0, 191, 255);
-  text("Cool food", coolRect[0]+60, coolRect[1]+30);
+  text("Cool After\nCooking", coolRect[0]+60, coolRect[1]+20);
   
   fill(0);
   
