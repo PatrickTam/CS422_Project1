@@ -16,7 +16,9 @@ Audio alarmSound = new Audio();
 PImage img;
 PImage timeImg;
 PImage tempImg;
-
+PImage lock;
+PImage unlock;
+PImage coolwind;
 
 //a bunch of globals...
 int[][] triangles = {{1115, 190, 1085, 190, 1100, 160}, {1180, 190, 1150, 190, 1165, 160}, {1255, 190, 1225, 190, 1240, 160}};
@@ -166,6 +168,15 @@ void setup() {
   tempImg = loadImage("temp.png", "png");
   tempImg.loadPixels();
   tempImg.resize(50, 50);
+  
+  lock = loadImage("lock.png", "png");
+  lock.loadPixels();
+  
+  unlock = loadImage("unlocked.png", "png");
+  unlock.loadPixels();
+
+  coolwind = loadImage("coolwind.png", "png");
+  coolwind.loadPixels();
 
   f = createFont("Arial", 24, true);
 
@@ -277,8 +288,17 @@ void draw() {
   fill(127);
   
   //rectangle to set the code before starting
-  if(additional == 1)
+  if(additional == 1){
   rect(codeRect[0], codeRect[1], 130, 50, 10);
+  if(setLock == 1){
+    lock.resize(50,50);
+  image(lock, codeRect[0]+140, codeRect[1]);
+  }
+  else{
+    unlock.resize(50,50);
+  image(unlock, codeRect[0]+140, codeRect[1]);
+  }
+  }
   
   fill(0);
   textSize(20);
@@ -300,8 +320,11 @@ void draw() {
   rect(cleanRect[0], cleanRect[1], 130, 50, 10);
   
   //cool rectangle
-  if(additional == 1)
+  if(additional == 1){
   rect(coolRect[0], coolRect[1], 130, 50, 10);
+  coolwind.resize(50,50);
+  image(coolwind, coolRect[0]+140, coolRect[1]);
+  }
   
   //if we did click to clean
   if(cleanFlag == 1){
@@ -680,13 +703,13 @@ void draw() {
     //triangle (300, 300, 250, 200, 200, 300);
     if (selectedType == "time") {
       if (selectedDir == "up") {
-        if (timeArr[0] == 99)
+        if (timeArr[0] == 24)
           timeArr[0] = 0;
         else
           timeArr[0] += 1;
       } else {
         if (timeArr[0] == 0)
-          timeArr[0] = 99;
+          timeArr[0] = 24;
         else
           timeArr[0] -= 1;
       }
